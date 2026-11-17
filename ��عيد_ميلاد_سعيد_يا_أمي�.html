@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عيد ميلاد سعيد يا أغلى أم</title>
+    
+    <!-- استيراد Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- استيراد خطوط عربية أنيقة: Cairo و Amiri -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- مكتبة قصاصات الورق الاحتفالية Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        amiri: ['Amiri', 'serif'],
+                    },
+                    colors: {
+                        roseSoft: '#FFF5F7',
+                        roseBlush: '#FFE4E8',
+                        roseAccent: '#E11D48',
+                        goldLight: '#FDE68A',
+                        goldPrimary: '#D97706',
+                        goldDark: '#92400E',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFFBEB 50%, #FCE7F3 100%);
+            overflow-x: hidden;
+        }
+
+        .font-amiri {
+            font-family: 'Amiri', serif;
+        }
+
+        /* تأثير تدرج ذهبي للنصوص */
+        .gold-gradient-text {
+            background: linear-gradient(to left, #B45309, #D97706, #F59E0B, #B45309);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        /* حركة البالونات والقلوب العائمة في الخلفية */
+        .floating-element {
+            position: fixed;
+            bottom: -100px;
+            z-index: 0;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(360deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        /* تصميم إطار البولارويد */
+        .polaroid-card {
+            background: #ffffff;
+            padding: 14px 14px 24px 14px;
+            box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.12), 0 8px 10px -6px rgba(217, 119, 6, 0.1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(253, 230, 138, 0.6);
+        }
+
+        .polaroid-card:hover {
+            transform: translateY(-8px) rotate(0deg) !important;
+            box-shadow: 0 20px 30px -10px rgba(225, 29, 72, 0.22);
+            z-index: 10;
+        }
+
+        /* حركة شعلة الشمعة */
+        .flame {
+            animation: flicker 0.6s infinite alternate;
+            transform-origin: bottom center;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); opacity: 0.95; }
+            50% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+            100% { transform: scale(0.95) rotate(-1deg); opacity: 0.9; }
+        }
+
+        /* دخان الشمعة بعد الإطفاء */
+        .smoke {
+            animation: smokeRise 2s ease-out forwards;
+        }
+
+        @keyframes smokeRise {
+            0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
+            100% { transform: translateY(-40px) scale(1.8); opacity: 0; }
+        }
+
+        /* موجات الصوت المتحركة */
+        .equalizer-bar {
+            width: 4px;
+            background-color: #E11D48;
+            border-radius: 9999px;
+            transition: height 0.2s ease;
+        }
+        .playing .equalizer-bar:nth-child(1) { animation: eq 0.8s infinite ease-in-out; }
+        .playing .equalizer-bar:nth-child(2) { animation: eq 0.6s infinite ease-in-out 0.2s; }
+        .playing .equalizer-bar:nth-child(3) { animation: eq 0.9s infinite ease-in-out 0.1s; }
+        .playing .equalizer-bar:nth-child(4) { animation: eq 0.7s infinite ease-in-out 0.3s; }
+
+        @keyframes eq {
+            0%, 100% { height: 6px; }
+            50% { height: 22px; }
+        }
+
+        /* إخفاء شريط التمرير مع الحفاظ على التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FFF5F7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #F43F5E;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased selection:bg-rose-200 selection:text-rose-900">
+
+    <!-- حاوية العناصر العائمة في الخلفية (قلوب وبالونات) -->
+    <div id="floating-bg" class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <!-- ==========================================
+         1. شاشة الترحيب المبهجة (Welcome Overlay)
+    =========================================== -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-rose-100 via-amber-50 to-pink-100 p-6 text-center transition-all duration-700">
+        <div class="max-w-lg w-full bg-white/85 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl border-2 border-amber-200/80 transform transition-all">
+            <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-tr from-rose-500 to-amber-500 rounded-full flex items-center justify-center text-white text-4xl shadow-lg animate-bounce">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <span class="inline-block px-4 py-1.5 rounded-full bg-rose-100 text-rose-700 text-sm font-bold mb-4">
+                يوم استثنائي لأغلى إنسانة ✨
+            </span>
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4 gold-gradient-text leading-tight">
+                عيد ميلاد سعيد يا أمي
+            </h1>
+            <p class="text-gray-600 text-base md:text-lg mb-8 leading-relaxed font-amiri text-xl">
+                كل عام وأنتِ نبض قلبي، ونور حياتي، وأجمل نعمة أنعم الله بها عليّ. جهزت لكِ هذه المفاجأة البسيطة لتعبر عن حبي لكِ.
+            </p>
+            <button id="start-celebration-btn" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-l from-rose-600 via-rose-500 to-amber-500 hover:from-rose-700 hover:to-amber-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-rose-300/50 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 mx-auto cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>ابدئي الاحتفال وشغّلي الموسيقى</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         المحتوى الرئيسي للصفحة
+    =========================================== -->
+    <main id="main-content" class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16">
+
+        <!-- ترويسة الصفحة -->
+        <header class="text-center space-y-4 pt-4">
+            <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-amber-200 shadow-sm text-amber-800 font-semibold text-sm">
+                <i class="fa-solid fa-heart text-rose-500 animate-pulse"></i>
+                <span>كل عام وأنتِ بخير وصحة وسعادة</span>
+                <i class="fa-solid fa-heart text-rose-500 animate-pulse"></i>
+            </div>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold gold-gradient-text py-2">
+                عيد ميلاد سعيد يا ست الحبايب
+            </h1>
+            <p class="font-amiri text-2xl sm:text-3xl text-rose-800/80 max-w-2xl mx-auto">
+                "أمي.. أنتِ لستِ فقط أمي، بل أنتِ عالمي بأكمله وسبب ابتسامتي في كل يوم"
+            </p>
+            <div class="pt-2">
+                <button onclick="triggerConfetti()" class="px-5 py-2.5 bg-amber-100 hover:bg-amber-200 text-amber-900 rounded-xl font-bold text-sm transition-colors inline-flex items-center gap-2 shadow-sm border border-amber-300">
+                    <i class="fa-solid fa-sparkles text-amber-600"></i>
+                    <span>إطلاق قصاصات الفرح</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ==========================================
+             2. مشغل أغنية عيد الميلاد المدمج
+        =========================================== -->
+        <section class="bg-white/90 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border border-rose-100">
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+                
+                <!-- معلومات الأغنية وحالة التشغيل -->
+                <div class="flex items-center gap-4 w-full lg:w-auto">
+                    <div id="music-disc" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center text-white text-2xl sm:text-3xl shadow-md shrink-0">
+                        <i class="fa-solid fa-music"></i>
+                    </div>
+                    <div class="space-y-1 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 text-xs font-bold bg-amber-100 text-amber-800 rounded-md">مشغل الاحتفال</span>
+                            <div id="equalizer" class="flex items-end gap-1 h-6 px-2">
+                                <span class="equalizer-bar h-2"></span>
+                                <span class="equalizer-bar h-3"></span>
+                                <span class="equalizer-bar h-2"></span>
+                                <span class="equalizer-bar h-3"></span>
+                            </div>
+                        </div>
+                        <h2 id="track-title" class="text-lg sm:text-xl font-bold text-gray-800 line-clamp-1">
+                            لحن عيد ميلاد سعيد (موسيقى مدمجة)
+                        </h2>
+                        <p id="track-subtitle" class="text-sm text-gray-500">
+                            اضغط تشغيل للاستماع أو اختر أغنية والدتك المفضلة من جهازك
+                        </p>
+                    </div>
+                </div>
+
+                <!-- أزرار التحكم ورفع الأغنية -->
+                <div class="flex flex-wrap items-center justify-center gap-3 w-full lg:w-auto">
+                    <!-- زر التشغيل / الإيقاف -->
+                    <button id="play-pause-btn" class="px-6 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-md transition-all flex items-center gap-2.5 cursor-pointer">
+                        <i id="play-icon" class="fa-solid fa-play"></i>
+                        <span id="play-text">تشغيل الأغنية</span>
+                    </button>
+
+                    <!-- زر العودة للحن المدمج (يظهر فقط عند رفع ملف خارجي) -->
+                    <button id="reset-synth-btn" class="hidden px-4 py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-2xl transition-all text-sm items-center gap-2 cursor-pointer" title="العودة للحن المدمج">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>اللحن المدمج</span>
+                    </button>
+
+                    <!-- زر رفع أغنية من الجهاز -->
+                    <label for="audio-upload" class="px-5 py-3.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border-2 border-dashed border-amber-400 font-bold rounded-2xl transition-all flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up text-amber-600 text-lg"></i>
+                        <span>رفع أغنية من جهازك (MP3)</span>
+                        <input type="file" id="audio-upload" accept="audio/*" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- عنصر الصوت المخفي للملفات المرفوعة -->
+            <audio id="custom-audio-player" class="hidden"></audio>
+        </section>
+
+        <!-- ==========================================
+             3. قسم معرض الصور (ذكرياتنا الجميلة - Polaroid)
+        =========================================== -->
+        <section class="space-y-8">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/80 backdrop-blur-sm p-6 rounded-3xl border border-amber-200/70 shadow-sm">
+                <div class="text-center sm:text-right">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800 flex items-center justify-center sm:justify-start gap-3">
+                        <i class="fa-solid fa-images text-rose-500"></i>
+                        <span>ذكرياتنا الجميلة معاً</span>
+                    </h2>
+                    <p class="text-gray-600 text-sm sm:text-base mt-1">
+                        أضيفي أجمل صورك وصور عائلتك، ويمكنكِ تعديل التعليق أسفل كل صورة مباشرة!
+                    </p>
+                </div>
+
+                <!-- زر رفع صور متعددة -->
+                <label for="photo-upload" class="px-6 py-4 bg-gradient-to-l from-rose-600 to-rose-500 hover:from-rose-700 hover:to-rose-600 text-white font-bold rounded-2xl shadow-lg hover:shadow-rose-300/50 transition-all flex items-center gap-3 cursor-pointer shrink-0 transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-camera-retro text-xl"></i>
+                    <span>إضافة صور من جهازك</span>
+                    <input type="file" id="photo-upload" accept="image/*" multiple class="hidden">
+                </label>
+            </div>
+
+            <!-- شبكة الصور (Polaroid Grid) -->
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-2">
+                <!-- سيتم تعبئة الصور الافتراضية والصور المرفوعة هنا عبر الجافاسكربت -->
+            </div>
+        </section>
+
+        <!-- ==========================================
+             4. قسم كيكة عيد الميلاد التفاعلية وبطاقة التهنئة
+        =========================================== -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- بطاقة كيكة عيد الميلاد التفاعلية (5 أعمدة) -->
+            <div class="lg:col-span-5 bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 shadow-xl border border-amber-200 flex flex-col items-center justify-between text-center">
+                <div>
+                    <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold">تمنّي أمنية يا أمي ✨</span>
+                    <h3 class="text-2xl font-extrabold text-gray-800 mt-3">كيكة عيد الميلاد</h3>
+                    <p id="cake-instruction" class="text-gray-500 text-sm mt-1">
+                        اضغطي على الزر بالأسفل لإطفاء الشموع والاحتفال!
+                    </p>
+                </div>
+
+                <!-- رسم الكيكة المتحركة بالـ SVG -->
+                <div class="my-6 relative w-64 h-64 flex items-center justify-center">
+                    <svg viewBox="0 0 240 240" class="w-full h-full drop-shadow-md">
+                        <!-- طبق الكيكة -->
+                        <ellipse cx="120" cy="210" rx="105" ry="16" fill="#FDE68A" stroke="#D97706" stroke-width="2"/>
+                        <ellipse cx="120" cy="206" rx="95" ry="12" fill="#FFFBEB"/>
+                        
+                        <!-- الطبقة السفلية للكيكة -->
+                        <rect x="40" y="145" width="160" height="60" rx="14" fill="#FDA4AF"/>
+                        <path d="M40 165 Q 60 180, 80 165 T 120 165 T 160 165 T 200 165 L 200 155 Q 200 145, 190 145 L 50 145 Q 40 145, 40 155 Z" fill="#FFF1F2"/>
+                        <!-- زينة ذهبية -->
+                        <circle cx="65" cy="185" r="4" fill="#F59E0B"/>
+                        <circle cx="95" cy="185" r="4" fill="#F59E0B"/>
+                        <circle cx="120" cy="185" r="4" fill="#F59E0B"/>
+                        <circle cx="145" cy="185" r="4" fill="#F59E0B"/>
+                        <circle cx="175" cy="185" r="4" fill="#F59E0B"/>
+
+                        <!-- الطبقة العلوية للكيكة -->
+                        <rect x="60" y="95" width="120" height="52" rx="12" fill="#FB7185"/>
+                        <path d="M60 112 Q 75 125, 90 112 T 120 112 T 150 112 T 180 112 L 180 105 Q 180 95, 170 95 L 70 95 Q 60 95, 60 105 Z" fill="#FFFFFF"/>
+
+                        <!-- الشموع الثلاث -->
+                        <!-- شمعة يسار -->
+                        <rect x="82" y="60" width="10" height="35" rx="3" fill="#FBBF24"/>
+                        <line x1="82" y1="68" x2="92" y2="73" stroke="#FFFFFF" stroke-width="2"/>
+                        <line x1="82" y1="78" x2="92" y2="83" stroke="#FFFFFF" stroke-width="2"/>
+                        
+                        <!-- شمعة وسط -->
+                        <rect x="115" y="52" width="10" height="43" rx="3" fill="#38BDF8"/>
+                        <line x1="115" y1="62" x2="125" y2="67" stroke="#FFFFFF" stroke-width="2"/>
+                        <line x1="115" y1="74" x2="125" y2="79" stroke="#FFFFFF" stroke-width="2"/>
+
+                        <!-- شمعة يمين -->
+                        <rect x="148" y="60" width="10" height="35" rx="3" fill="#A78BFA"/>
+                        <line x1="148" y1="68" x2="158" y2="73" stroke="#FFFFFF" stroke-width="2"/>
+                        <line x1="148" y1="78" x2="158" y2="83" stroke="#FFFFFF" stroke-width="2"/>
+
+                        <!-- مجموعة الشعلات (تختفي عند الإطفاء) -->
+                        <g id="candle-flames">
+                            <!-- شعلة يسار -->
+                            <path class="flame" d="M87 38 C 82 48, 82 56, 87 58 C 92 56, 92 48, 87 38 Z" fill="#F59E0B"/>
+                            <path class="flame" d="M87 44 C 84 50, 84 55, 87 56 C 90 55, 90 50, 87 44 Z" fill="#FEF08A"/>
+                            
+                            <!-- شعلة وسط -->
+                            <path class="flame" d="M120 28 C 114 40, 114 48, 120 50 C 126 48, 126 40, 120 28 Z" fill="#F59E0B"/>
+                            <path class="flame" d="M120 35 C 117 42, 117 47, 120 48 C 123 47, 123 42, 120 35 Z" fill="#FEF08A"/>
+                            
+                            <!-- شعلة يمين -->
+                            <path class="flame" d="M153 38 C 148 48, 148 56, 153 58 C 158 56, 158 48, 153 38 Z" fill="#F59E0B"/>
+                            <path class="flame" d="M153 44 C 150 50, 150 55, 153 56 C 156 55, 156 50, 153 44 Z" fill="#FEF08A"/>
+                        </g>
+
+                        <!-- مجموعة الدخان (تظهر عند الإطفاء) -->
+                        <g id="candle-smoke" class="hidden">
+                            <circle cx="87" cy="45" r="4" fill="#9CA3AF" class="smoke"/>
+                            <circle cx="120" cy="35" r="5" fill="#9CA3AF" class="smoke"/>
+                            <circle cx="153" cy="45" r="4" fill="#9CA3AF" class="smoke"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- زر إطفاء / إشعال الشموع -->
+                <button id="blow-candles-btn" class="w-full py-3.5 px-6 bg-gradient-to-l from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white font-bold rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-wind"></i>
+                    <span id="blow-btn-text">إطفاء الشموع</span>
+                </button>
+            </div>
+
+            <!-- بطاقة رسالة الحب القابلة للتعديل (7 أعمدة) -->
+            <div class="lg:col-span-7 bg-gradient-to-br from-white via-rose-50/60 to-amber-50/70 backdrop-blur-md rounded-3xl p-6 sm:p-10 shadow-xl border-2 border-amber-200/80 flex flex-col justify-between relative overflow-hidden">
+                <!-- زخرفة زاوية -->
+                <div class="absolute top-0 left-0 w-24 h-24 bg-amber-200/30 rounded-br-full pointer-events-none"></div>
+                <div class="absolute bottom-0 right-0 w-24 h-24 bg-rose-200/30 rounded-tl-full pointer-events-none"></div>
+
+                <div>
+                    <div class="flex items-center justify-between gap-2 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-extrabold text-gray-800">رسالة من القلب</h3>
+                                <p class="text-xs text-gray-500">يمكنك النقر على النص لتعديله وكتابة رسالتك الخاصة</p>
+                            </div>
+                        </div>
+                        <button id="edit-message-btn" class="px-3.5 py-2 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <span>تعديل الرسالة</span>
+                        </button>
+                    </div>
+
+                    <!-- نص الرسالة القابل للتعديل -->
+                    <div id="love-letter-box" contenteditable="true" class="font-amiri text-2xl sm:text-3xl text-gray-800 leading-relaxed p-5 rounded-2xl bg-white/70 border border-transparent focus:border-amber-400 focus:bg-white focus:outline-none transition-all min-h-[200px]">
+                        أمي الحبيبة،<br>
+                        في يوم ميلادك، أود أن أشكركِ على كل لحظة حب وحنان وتضحية قدمتِها لنا. أنتِ البركة في بيتنا، والدعوة الصادقة التي تفتح لنا أبواب الخير.<br>
+                        أسأل الله أن يطيل في عمركِ، ويمتعكِ بالصحة والعافية، ويديم ابتسامتكِ التي تضيء حياتنا.<br>
+                        كل عام وأنتِ تاج فوق رؤوسنا.. أحبكِ جداً! ❤️
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-amber-200/60 flex items-center justify-between text-sm text-amber-900 font-semibold">
+                    <span>بكل الحب والتقدير، أبناؤكِ ❤️</span>
+                    <span id="save-status" class="text-xs text-emerald-600 opacity-0 transition-opacity">
+                        <i class="fa-solid fa-check"></i> تم حفظ التعديل
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- تذييل الصفحة -->
+        <footer class="text-center py-6 text-gray-500 text-sm">
+            <p>صُنع بكل حب خصيصاً للاحتفال بعيد ميلاد أغلى أم في الدنيا 💐</p>
+        </footer>
+    </main>
+
+    <!-- ==========================================
+         نافذة عرض الصورة المكبرة (Lightbox Modal)
+    =========================================== -->
+    <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="relative max-w-3xl w-full bg-white rounded-3xl p-4 sm:p-6 shadow-2xl" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute -top-4 -left-4 w-10 h-10 bg-rose-600 hover:bg-rose-700 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110 cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <img id="modal-img" src="" alt="صورة مكبرة" class="w-full max-h-[70vh] object-contain rounded-2xl bg-gray-50">
+            <p id="modal-caption" class="text-center font-amiri text-2xl text-gray-800 mt-4 font-bold"></p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         رسالة تنبيه عائمة (Toast Notification)
+    =========================================== -->
+    <div id="toast-msg" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-900/90 text-white px-6 py-3 rounded-full shadow-xl text-sm font-semibold flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300">
+        <i class="fa-solid fa-circle-check text-amber-400"></i>
+        <span id="toast-text">تم بنجاح</span>
+    </div>
+
+    <!-- ==========================================
+         أكواد الجافاسكربت التفاعلية
+    =========================================== -->
+    <script>
+        // --- 1. إنشاء الخلفية العائمة (قلوب وبالونات) ---
+        function createFloatingElements() {
+            const container = document.getElementById('floating-bg');
+            const icons = ['❤️', '🎈', '✨', '🌸', '💛', '🎂'];
+            const count = 18;
+
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-element text-2xl sm:text-3xl select-none';
+                el.textContent = icons[Math.floor(Math.random() * icons.length)];
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (12 + Math.random() * 15) + 's';
+                el.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(el);
+            }
+        }
+
+        // --- 2. إطلاق قصاصات الورق (Confetti) ---
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 90,
+                    spread: 75,
+                    origin: { y: 0.6 },
+                    colors: ['#E11D48', '#F59E0B', '#FDE68A', '#FB7185', '#FFFFFF']
+                });
+            }
+        }
+
+        // --- 3. شاشة الترحيب ---
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const startBtn = document.getElementById('start-celebration-btn');
+
+        startBtn.addEventListener('click', () => {
+            welcomeScreen.classList.add('opacity-0', 'pointer-events-none', 'scale-105');
+            setTimeout(() => {
+                welcomeScreen.style.display = 'none';
+            }, 700);
+            
+            triggerConfetti();
+            startMusic(); // بدء تشغيل اللحن تلقائياً عند الضغط
+        });
+
+        // --- 4. مشغل الموسيقى (Web Audio API + رفع ملف صوتي) ---
+        let audioCtx = null;
+        let isPlaying = false;
+        let isCustomAudio = false;
+        let synthTimeout = null;
+        let noteIndex = 0;
+
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playIcon = document.getElementById('play-icon');
+        const playText = document.getElementById('play-text');
+        const equalizer = document.getElementById('equalizer');
+        const musicDisc = document.getElementById('music-disc');
+        const audioUpload = document.getElementById('audio-upload');
+        const customAudioPlayer = document.getElementById('custom-audio-player');
+        const trackTitle = document.getElementById('track-title');
+        const trackSubtitle = document.getElementById('track-subtitle');
+        const resetSynthBtn = document.getElementById('reset-synth-btn');
+
+        // نوتات أغنية Happy Birthday To You بالترددات (Hz) والمدة (بالثواني)
+        const happyBirthdayNotes = [
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.15 }, { freq: 293.66, dur: 0.5 }, { freq: 261.63, dur: 0.5 }, { freq: 349.23, dur: 0.5 }, { freq: 329.63, dur: 0.9 },
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.15 }, { freq: 293.66, dur: 0.5 }, { freq: 261.63, dur: 0.5 }, { freq: 392.00, dur: 0.5 }, { freq: 349.23, dur: 0.9 },
+            { freq: 261.63, dur: 0.35 }, { freq: 261.63, dur: 0.15 }, { freq: 523.25, dur: 0.5 }, { freq: 440.00, dur: 0.5 }, { freq: 349.23, dur: 0.5 }, { freq: 329.63, dur: 0.5 }, { freq: 293.66, dur: 0.9 },
+            { freq: 466.16, dur: 0.35 }, { freq: 466.16, dur: 0.15 }, { freq: 440.00, dur: 0.5 }, { freq: 349.23, dur: 0.5 }, { freq: 392.00, dur: 0.5 }, { freq: 349.23, dur: 1.0 }
+        ];
+
+        function playSynthNote() {
+            if (!isPlaying || isCustomAudio) return;
+
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const note = happyBirthdayNotes[noteIndex];
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            // صوت ناعم يشبه البيانو/صندوق الموسيقى
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(note.freq, audioCtx.currentTime);
+
+            gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.25, audioCtx.currentTime + 0.04);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + note.dur);
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + note.dur);
+
+            noteIndex = (noteIndex + 1) % happyBirthdayNotes.length;
+            const pauseBetween = noteIndex === 0 ? 1200 : (note.dur * 1000) + 60;
+
+            synthTimeout = setTimeout(playSynthNote, pauseBetween);
+        }
+
+        function updatePlayerUI(playing) {
+            isPlaying = playing;
+            if (playing) {
+                playIcon.className = 'fa-solid fa-pause';
+                playText.textContent = 'إيقاف مؤقت';
+                equalizer.classList.add('playing');
+                musicDisc.classList.add('animate-pulse');
+            } else {
+                playIcon.className = 'fa-solid fa-play';
+                playText.textContent = 'تشغيل الأغنية';
+                equalizer.classList.remove('playing');
+                musicDisc.classList.remove('animate-pulse');
+            }
+        }
+
+        function startMusic() {
+            if (isPlaying) return;
+            updatePlayerUI(true);
+            if (isCustomAudio) {
+                customAudioPlayer.play();
+            } else {
+                playSynthNote();
+            }
+        }
+
+        function stopMusic() {
+            updatePlayerUI(false);
+            if (isCustomAudio) {
+                customAudioPlayer.pause();
+            } else {
+                clearTimeout(synthTimeout);
+            }
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                stopMusic();
+            } else {
+                startMusic();
+            }
+        });
+
+        // رفع ملف صوتي من جهاز المستخدم
+        audioUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            stopMusic();
+            const fileURL = URL.createObjectURL(file);
+            customAudioPlayer.src = fileURL;
+            customAudioPlayer.loop = true;
+            isCustomAudio = true;
+
+            trackTitle.textContent = file.name.replace(/\.[^/.]+$/, "");
+            trackSubtitle.textContent = 'أغنية مخصصة من جهازك 🎵';
+            resetSynthBtn.classList.remove('hidden');
+            resetSynthBtn.classList.add('flex');
+
+            startMusic();
+            showToast('تم تحميل الأغنية وتشغيلها بنجاح!');
+        });
+
+        // العودة للحن المدمج
+        resetSynthBtn.addEventListener('click', () => {
+            stopMusic();
+            isCustomAudio = false;
+            noteIndex = 0;
+            trackTitle.textContent = 'لحن عيد ميلاد سعيد (موسيقى مدمجة)';
+            trackSubtitle.textContent = 'اضغط تشغيل للاستماع أو اختر أغنية والدتك المفضلة من جهازك';
+            resetSynthBtn.classList.add('hidden');
+            resetSynthBtn.classList.remove('flex');
+            startMusic();
+        });
+
+        // --- 5. معرض الصور التفاعلي (Polaroid Gallery) ---
+        const galleryGrid = document.getElementById('gallery-grid');
+        const photoUpload = document.getElementById('photo-upload');
+
+        // صور افتراضية أنيقة كنماذج يمكن استبدالها أو الإضافة عليها
+        const defaultMemories = [
+            {
+                id: 'def-1',
+                src: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80',
+                caption: 'أجمل باقة ورد لأجمل أم في الدنيا 🌹',
+                rotation: '-rotate-1'
+            },
+            {
+                id: 'def-2',
+                src: 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?auto=format&fit=crop&w=800&q=80',
+                caption: 'كل عام وأنتِ نور حياتنا وبهجتها 🎂',
+                rotation: 'rotate-1'
+            },
+            {
+                id: 'def-3',
+                src: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=800&q=80',
+                caption: 'ذكريات لا تُنسى مع ست الحبايب ✨',
+                rotation: '-rotate-1'
+            }
+        ];
+
+        function createPolaroidCard(photo) {
+            const card = document.createElement('div');
+            card.className = `polaroid-card rounded-2xl relative group ${photo.rotation || ''}`;
+            card.dataset.id = photo.id;
+
+            card.innerHTML = `
+                <!-- أزرار التحكم بالصورة (تكبير وحذف) -->
+                <div class="absolute top-5 left-5 z-20 flex gap-2 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onclick="openModal('${photo.src}', this)" class="w-9 h-9 rounded-full bg-white/90 hover:bg-amber-500 text-gray-800 hover:text-white shadow-md flex items-center justify-center transition-colors cursor-pointer" title="تكبير الصورة">
+                        <i class="fa-solid fa-expand text-sm"></i>
+                    </button>
+                    <button onclick="deletePhoto(this)" class="w-9 h-9 rounded-full bg-white/90 hover:bg-rose-600 text-rose-600 hover:text-white shadow-md flex items-center justify-center transition-colors cursor-pointer" title="حذف الصورة">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
+                </div>
+
+                <!-- إطار الصورة -->
+                <div class="w-full h-64 sm:h-72 overflow-hidden rounded-xl bg-rose-50 cursor-pointer" onclick="openModal('${photo.src}', this)">
+                    <img src="${photo.src}" alt="ذكرى جميلة" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x600/FFE4E8/E11D48?text=أجمل+ذكرى'">
+                </div>
+
+                <!-- التعليق القابل للتعديل أسفل الصورة -->
+                <div class="mt-4 text-center px-2">
+                    <p contenteditable="true" class="caption-text font-amiri text-xl sm:text-2xl text-gray-800 font-bold focus:outline-none focus:bg-amber-50 rounded-lg px-2 py-1 transition-colors" title="انقر لتعديل التعليق">
+                        ${photo.caption}
+                    </p>
+                    <span class="text-[11px] text-gray-400 block mt-1">
+                        <i class="fa-solid fa-pen text-[10px]"></i> انقر على النص لتعديله
+                    </span>
+                </div>
+            `;
+            return card;
+        }
+
+        // تحميل الصور الافتراضية
+        defaultMemories.forEach(item => {
+            galleryGrid.appendChild(createPolaroidCard(item));
+        });
+
+        // رفع صور جديدة من جهاز المستخدم
+        photoUpload.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (!files.length) return;
+
+            const rotations = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2'];
+
+            files.forEach((file, idx) => {
+                if (!file.type.startsWith('image/')) return;
+                
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const newPhoto = {
+                        id: 'user-' + Date.now() + '-' + idx,
+                        src: event.target.result,
+                        caption: 'أجمل لحظة مع أمي الغالية ❤️',
+                        rotation: rotations[Math.floor(Math.random() * rotations.length)]
+                    };
+                    // إضافة الصورة الجديدة في بداية المعرض
+                    const card = createPolaroidCard(newPhoto);
+                    galleryGrid.prepend(card);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            triggerConfetti();
+            showToast(`تمت إضافة ${files.length} صورة بنجاح!`);
+            photoUpload.value = ''; // إعادة تعيين المدخل للسماح برفع نفس الصورة مجدداً إن أراد
+        });
+
+        // حذف صورة من المعرض
+        window.deletePhoto = function(btn) {
+            const card = btn.closest('.polaroid-card');
+            card.style.transform = 'scale(0.8)';
+            card.style.opacity = '0';
+            setTimeout(() => {
+                card.remove();
+                showToast('تم حذف الصورة من المعرض');
+            }, 250);
+        };
+
+        // --- 6. نافذة تكبير الصورة (Modal) ---
+        const imageModal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalCaption = document.getElementById('modal-caption');
+
+        window.openModal = function(src, element) {
+            const card = element.closest('.polaroid-card');
+            const caption = card.querySelector('.caption-text').innerText;
+            modalImg.src = src;
+            modalCaption.textContent = caption;
+            imageModal.classList.remove('hidden');
+        };
+
+        window.closeModal = function() {
+            imageModal.classList.add('hidden');
+        };
+
+        // --- 7. التفاعل مع كيكة عيد الميلاد وإطفاء الشموع ---
+        const blowBtn = document.getElementById('blow-candles-btn');
+        const blowBtnText = document.getElementById('blow-btn-text');
+        const candleFlames = document.getElementById('candle-flames');
+        const candleSmoke = document.getElementById('candle-smoke');
+        const cakeInstruction = document.getElementById('cake-instruction');
+        let candlesLit = true;
+
+        blowBtn.addEventListener('click', () => {
+            if (candlesLit) {
+                // إطفاء الشموع
+                candleFlames.classList.add('hidden');
+                candleSmoke.classList.remove('hidden');
+                candlesLit = false;
+                
+                blowBtnText.textContent = 'إشعال الشموع مرة أخرى';
+                cakeInstruction.textContent = 'تمنّينا لكِ عاماً مليئاً بالصحة والسعادة! 🎉';
+                
+                triggerConfetti();
+                setTimeout(triggerConfetti, 400);
+                showToast('كل عام وأنتِ بخير يا ست الحبايب! 🎂🎉');
+            } else {
+                // إعادة إشعال الشموع
+                candleFlames.classList.remove('hidden');
+                candleSmoke.classList.add('hidden');
+                candlesLit = true;
+                
+                blowBtnText.textContent = 'إطفاء الشموع';
+                cakeInstruction.textContent = 'اضغطي على الزر بالأسفل لإطفاء الشموع والاحتفال!';
+            }
+        });
+
+        // --- 8. تعديل بطاقة الرسالة ---
+        const editMsgBtn = document.getElementById('edit-message-btn');
+        const loveLetterBox = document.getElementById('love-letter-box');
+        const saveStatus = document.getElementById('save-status');
+
+        editMsgBtn.addEventListener('click', () => {
+            loveLetterBox.focus();
+            // وضع المؤشر في نهاية النص
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.selectNodeContents(loveLetterBox);
+            range.collapse(false);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+
+        loveLetterBox.addEventListener('input', () => {
+            saveStatus.classList.remove('opacity-0');
+            clearTimeout(window.saveTimer);
+            window.saveTimer = setTimeout(() => {
+                saveStatus.classList.add('opacity-0');
+            }, 2000);
+        });
+
+        // --- 9. إشعارات خفيفة (Toast) ---
+        function showToast(message) {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            toastText.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3000);
+        }
+
+        // تهيئة العناصر عند تحميل الصفحة
+        window.addEventListener('DOMContentLoaded', () => {
+            createFloatingElements();
+        });
+    </script>
+</body>
+</html>
